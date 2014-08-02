@@ -7,10 +7,15 @@ A simple language which was created for the purpose of a puzzle/riddle game whit
 	$ pip install herbert
 
 
-
 ### Run
 
 	$ herbert code.h
+	sssrrr
+
+
+	# code.h
+	f:rrr
+	sssf
 
 
 ### Usage
@@ -120,3 +125,4 @@ the same function:
 Now f(s)[5] will result in "srssrsssrssssrsssssr"
 
 That's it! You know all you need to know to write "h" programs.
+
