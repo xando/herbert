@@ -2,6 +2,19 @@
 
 A simple language which was created for the purpose of a puzzle/riddle game whit the same name.
 
+### Install
+
+	$ pip install herbert
+
+
+
+### Run
+
+	$ herbert code.h
+
+
+### Usage
+
 As an output the language will generate a chain combined of `s`, `r`, `l`, eg `sssrrssllss`
 
 Where :
@@ -18,7 +31,7 @@ Of course, any level may be solved just with these.
 But the real objective of the game, is to write small programs (the smallest possible).
 In order to do that language provides **functions**.
 
-### Basics
+#### Basics
 
 To call the same sequence of steps more than once. Functions are just a way
 to group a sequence of commands that you can reuse many times.
@@ -41,7 +54,7 @@ Function bodies can contain any instructions even other function calls. For exam
 	q:flfr
 	q
 
-### Recursion
+#### Recursion
 
 This program is equivalent to the above. Note how it defines
 two functions ('f' and 'q'), and how the second one calls the first.
@@ -55,7 +68,7 @@ and then calls itself which executes 's', which calls 'f' again .... etc.
 This means that, when executing the 'f' the robot well keep moving forward infinitely.
 
 
-### Numeric arguments (not implemented)
+#### Numeric arguments (not implemented)
 
 
 Functions can take arguments to control their behavior. There are two types of
@@ -97,7 +110,7 @@ this will result in the following (infinit) instruction sequence:
 "llslsslssslsssslssssslssssss..."
 
 
-### Mixing arguments (not implemented)
+#### Mixing arguments (not implemented)
 
 Of course, you can have more than one argument and you can mix both types within
 the same function:
