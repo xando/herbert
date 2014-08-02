@@ -24,9 +24,9 @@ content of the `code.h` file
 As an output the language will generate a chain combined of `s`, `r`, `l`, eg `sssrrssllss`
 
 Where:
-* **s** - stands for straight This makes the robot move straight ahead;
-* **l** - stands for left) This makes the robot turns to its left;
-* **r** - stands for right) This makes the robot turns to its right.
+* `s` - stands for straight This makes the robot move straight ahead;
+* `l` - stands for left) This makes the robot turns to its left;
+* `r` - stands for right) This makes the robot turns to its right.
 
 Each of this steps is responsible of changing state of the game character.
 
