@@ -182,6 +182,21 @@ class Variable(Node):
             self.error('Variable "%s" is undefined.' % self.name, ctx)
 
 
+class Number(Node):
+    def __init__(self, value, pos=None):
+        self.value = value
+        self.pos = pos
+
+    def getstr(self):
+        return self.value
+
+    def __repr__(self):
+        return "Number(%s)" % self.value
+
+    def compile(self, ctx):
+        pass
+
+
 class DefArg(Node):
     def __init__(self, name, pos=None):
         self.name = name

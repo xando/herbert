@@ -128,6 +128,22 @@ def test_func_call_args_moves():
         )
     ])
 
+def test_func_call_args_numbers():
+
+    _ast = parse("""
+    f[10]
+    """)
+
+    assert _ast.lines[0] == ast.Line([
+        ast.FuncCall(
+            'f',
+            ast.CallArgList([
+                ast.Line([ast.Step('s')])
+            ])
+        )
+    ])
+
+
 
 def test_func_def():
 

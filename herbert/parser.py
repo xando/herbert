@@ -115,28 +115,35 @@ def step(p):
     return ast.Step(p[0].getstr(), p[0].getsourcepos())
 
 
-@pg.production("func-call : FUNC ( args-list ) ")
+@pg.production("func-call : FUNC ( args-list-steps ) ")
 def func_call_args(p):
     return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
 
 
-@pg.production("args-list : args-list , arg ")
-def func_call_args_list(p):
+@pg.production("func-call : FUNC [ args-list-numbers ] ")
+def func_call_args_numeric(p):
+    return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
+
+
+@pg.production("args-list-numbers : args-list-numbers , arg-number ")
+@pg.production("args-list-steps : args-list-steps , arg-moves ")
+def call_args_list(p):
     p[0].append(p[2])
     return p[0]
 
 
-@pg.production("args-list : arg ")
-def func_call_args(p):
+@pg.production("args-list-steps : arg-moves ")
+@pg.production("args-list-numbers : arg-number ")
+def call_args(p):
     return ast.CallArgList([p[0]])
 
 
-@pg.production("arg : DIGIT ")
-def call_args_DIGIT(p):
-    return ast.CallArg(p[0].getstr(), p[0].getsourcepos())
+@pg.production("arg-number : NUMBER ")
+def call_args_NUMBER(p):
+    return ast.Number(p[0].getstr(), p[0].getsourcepos())
 
 
-@pg.production("arg : moves-list ")
+@pg.production("arg-moves : moves-list ")
 def call_args_moves_list(p):
     return p[0]
 
