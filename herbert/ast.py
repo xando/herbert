@@ -134,7 +134,7 @@ class FuncCall(Node):
         ctx.stack.append(Frame(call_variables))
 
         if len(ctx.stack) > 64:
-           # a bit stupid, but good enoguh for now
+           # a bit stupid, but good enough for now
            self.error('Stack limit reached.', ctx)
 
         for step in function_body.get_stmts():
