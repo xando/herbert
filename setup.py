@@ -7,7 +7,8 @@ setup(
     author_email='sebastian.pawlus@gmail.com',
     version="0.1",
     packages=['herbert'],
-    description='A implmentation of herbert language',
+    description='An implmentation of herbert language',
+    install_requires=["rply"],
     entry_points={
         'console_scripts': [
             'herbert=herbert.main:main',
