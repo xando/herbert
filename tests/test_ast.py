@@ -1,5 +1,5 @@
-from language import parser
-from language import ast
+from herbert import parser
+from herbert import ast
 
 
 def parse(code):
