@@ -5,7 +5,7 @@ setup(
     name='herbert',
     author='Sebastian Pawluś',
     author_email='sebastian.pawlus@gmail.com',
-    version="0.1",
+    version="0.2",
     packages=['herbert'],
     description='An implmentation of herbert language',
     install_requires=["rply"],
