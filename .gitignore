@@ -1,0 +1,4 @@
+*.pyc
+web/db.sqlite3
+
+
