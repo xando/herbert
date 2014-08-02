@@ -75,8 +75,8 @@ Functions can take arguments to control their behavior. There are two types of
 arguments: instruction arguments, and numeric arguments. Here is an example of
 numeric arguments:
 
-		f[A]:ssslf[A-1]
-		f[4]
+	f[A]:ssslf[A-1]
+	f[4]
 
 The 'f' function takes a single argument (called 'A'). Argument names must be
 one upper case letter.  When using such a function you must append the
@@ -97,9 +97,9 @@ and minus sign ('-').
 
 There another kind of arguments called instruction arguments. Here is an example:
 
-		f(B):Bf(Bs)
-		f(l)
-
+	f(B):Bf(Bs)
+	f(l)
+	
 Here the parameter passed to 'f' is not supposed to be a number but an
 instruction sequence (like "ssslssl"). In order to invoke the instuction
 sequence passed as an argument simply use the argument name as a function call
@@ -115,7 +115,7 @@ this will result in the following (infinit) instruction sequence:
 Of course, you can have more than one argument and you can mix both types within
 the same function:
 
-		f(A)[B]:Arf(sA)[B-1]
+	f(A)[B]:Arf(sA)[B-1]
 
 Now f(s)[5] will result in "srssrsssrssssrsssssr"
 
