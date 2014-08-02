@@ -12,7 +12,7 @@ A simple language which was created for the purpose of a puzzle/riddle game whit
 	$ herbert code.h
 	sssrrr
 
-
+content of the `code.h` file 
 
 	# code.h
 	f:rrr
