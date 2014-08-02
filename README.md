@@ -96,11 +96,14 @@ calling itself with the same parameter to which it appends a new 's'. In the end
 this will result in the following (infinit) instruction sequence:
 "llslsslssslsssslssssslssssss..."
 
+
+### Mixing arguments (not implemented)
+
 Of course, you can have more than one argument and you can mix both types within
 the same function:
 
-		f(A,B):Arf(sA,B-1)
+		f(A)[B]:Arf(sA)[B-1]
 
-Now f(s,5) will result in "srssrsssrssssrsssssr"
+Now f(s)[5] will result in "srssrsssrssssrsssssr"
 
 That's it! You know all you need to know to write "h" programs.
