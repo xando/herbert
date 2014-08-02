@@ -13,6 +13,7 @@ A simple language which was created for the purpose of a puzzle/riddle game whit
 	sssrrr
 
 
+
 	# code.h
 	f:rrr
 	sssf
