@@ -47,8 +47,8 @@ This program is equivalent to the above. Note how it defines
 two functions ('f' and 'q'), and how the second one calls the first.
 Functions can even call themselves, this is called recursion:
 
-		f:sf
-		f
+	f:sf
+	f
 
 In this program we define a function that executes an 's',
 and then calls itself which executes 's', which calls 'f' again .... etc.
