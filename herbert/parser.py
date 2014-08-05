@@ -16,39 +16,39 @@ pg = ParserGenerator(
 
 
 @pg.production("main : line")
-def main(p):
+def _(p):
     return ast.Root([p[0]])
 
 
 @pg.production("main : NEWLINE")
-def main_empty(p):
+def _(p):
     return ast.Root([])
 
 
 @pg.production("main : NEWLINE line")
-def NEWLINE_main(p):
+def _(p):
     return ast.Root([p[1]])
 
 
 @pg.production("main : main line")
-def main_line(p):
+def _(p):
     p[0].append(p[1])
     return p[0]
 
 
 @pg.production("line : line-content NEWLINE ")
-def line(p):
+def _(p):
     return p[0]
 
 
 @pg.production("line-content : moves-list ")
 @pg.production("line-content : func-definition ")
-def line_content(p):
+def _(p):
     return p[0]
 
 
 @pg.production("func-definition : FUNC COLON moves-list ")
-def func_def(p):
+def _(p):
     return ast.FuncDefinition(
         p[0].getstr(),
         p[2],
@@ -58,7 +58,7 @@ def func_def(p):
 
 
 @pg.production("func-definition : FUNC ( def-args-list ) COLON moves-list ")
-def func_def_args(p):
+def _(p):
     return ast.FuncDefinition(
         p[0].getstr(),
         p[5],
@@ -68,51 +68,51 @@ def func_def_args(p):
 
 
 @pg.production("def-args-list : def-args-list , def-arg ")
-def func_def_args_list_def_args_list_def_arg(p):
+def _(p):
     p[0].append(p[2])
     return p[0]
 
 
 @pg.production("def-args-list : def-arg ")
-def func_def_args_list_def_arg(p):
+def _(p):
     return ast.DefArgList([p[0]])
 
 
 @pg.production("def-arg : NAME ")
-def func_def_args_list(p):
+def _(p):
     return ast.DefArg(p[0].getstr(), p[0].getsourcepos())
 
 
 @pg.production("moves-list : moves-list move ")
-def moves_list(p):
+def _(p):
     p[0].append(p[1])
     return p[0]
 
 
 @pg.production("moves-list : move ")
-def moves_list_move(p):
+def _(p):
     return ast.Line([p[0]])
 
 
 @pg.production("move : variable ")
 @pg.production("move : func-call ")
 @pg.production("move : step ")
-def move(p):
+def _(p):
     return p[0]
 
 
 @pg.production("variable : NAME ")
-def variable(p):
+def _(p):
     return ast.Variable(p[0].getstr(), p[0].getsourcepos())
 
 
 @pg.production("func-call : FUNC ")
-def func_call(p):
+def _(p):
     return ast.FuncCall(p[0].getstr(), None, p[0].getsourcepos())
 
 
 @pg.production("func-call : FUNC ( args-list ) ")
-def func_call_args(p):
+def _(p):
     return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
 
 
@@ -131,6 +131,7 @@ def _(p):
 def _(p):
     return p[0]
 
+
 @pg.production("arg : expr ")
 def _(p):
     return p[0]
@@ -138,26 +139,25 @@ def _(p):
 
 @pg.production("expr : expr PLUS expr")
 @pg.production("expr : expr MINUS expr")
-def func_call_expr_op(p):
+def _(p):
     return ast.Expr(p[0], p[1].getstr(), p[2])
 
 
 @pg.production("expr : NAME")
-def func_call_expr(p):
+def _(p):
     return ast.Variable(p[0].getstr(), p[0].getsourcepos())
 
 
 @pg.production("expr : NUMBER")
-def expr_num(p):
+def _(p):
     return ast.Number(int(p[0].getstr()), p[0].getsourcepos())
 
 
 @pg.production("step : STEP ")
 @pg.production("step : TURN_LEFT ")
 @pg.production("step : TURN_RIGHT ")
-def step(p):
+def _(p):
     return ast.Step(p[0].getstr(), p[0].getsourcepos())
-
 
 
 @pg.error
