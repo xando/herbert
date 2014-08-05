@@ -97,7 +97,6 @@ def test_func_call_args_moves():
         )
     ])
 
-
     _ast = parse("""
     f(sSs)
     """)
@@ -111,11 +110,9 @@ def test_func_call_args_moves():
         )
     ])
 
-
     _ast = parse("""
     f(s,F,sF)
     """)
-
 
     assert _ast.lines[0] == ast.Line([
         ast.FuncCall(
@@ -128,21 +125,50 @@ def test_func_call_args_moves():
         )
     ])
 
-def test_func_call_args_numbers():
+
+def test_func_call_args_depth():
 
     _ast = parse("""
-    f[10]
+    f(10)
     """)
 
     assert _ast.lines[0] == ast.Line([
-        ast.FuncCall(
-            'f',
-            ast.CallArgList([
-                ast.Line([ast.Step('s')])
-            ])
-        )
+        ast.FuncCall('f', ast.CallArgList([ast.Number(10)]))
     ])
 
+    _ast = parse("""
+    f(10+1)
+    """)
+
+    assert _ast.lines[0] == ast.Line([
+        ast.FuncCall('f', ast.CallArgList([
+            ast.Expr(ast.Number(10), '+', ast.Number(1))
+        ]))
+    ])
+
+    _ast = parse("""
+    f(A-1)
+    """)
+
+    assert _ast.lines[0] == ast.Line([
+        ast.FuncCall('f', ast.CallArgList([
+            ast.Expr(ast.Variable('A'), '-', ast.Number(1))
+        ]))
+    ])
+
+
+def test_func_call_args_mixed():
+    _ast = parse("""
+    f(ss, 10, A-1)
+    """)
+
+    assert _ast.lines[0] == ast.Line([
+        ast.FuncCall('f', ast.CallArgList([
+            ast.Line([ast.Step('s'), ast.Step('s')]),
+            ast.Number(10),
+            ast.Expr(ast.Variable('A'), '-', ast.Number(1))
+        ]))
+    ])
 
 
 def test_func_def():
@@ -151,7 +177,18 @@ def test_func_def():
     f:ss
     """)
 
-    assert _ast.lines[0] == ast.Line([
-        ast.FuncDefinition('f', ast.Line([ast.Step('s'), ast.Step('s')]), None)
-    ])
+    assert _ast.lines[0] == ast.FuncDefinition(
+        'f',
+        ast.Line([ast.Step('s'), ast.Step('s')]),
+    )
+
+    _ast = parse("""
+    f(A):ss
+    """)
+
+    assert _ast.lines[0] == ast.FuncDefinition(
+        'f',
+        ast.Line([ast.Step('s'), ast.Step('s')]),
+        [ast.DefArg('A')]
+    )
 

@@ -7,7 +7,10 @@ from . import lexer
 
 pg = ParserGenerator(
     lexer.TOKENS,
-    precedence=[("nonassoc", ['NEWLINE', ')', 'COLON'])],
+    precedence=[
+        ("nonassoc", ['NEWLINE', ')', 'COLON']),
+        ("left", ['PLUS', 'MINUS'])
+    ],
     cache_id="language"
 )
 
@@ -46,22 +49,22 @@ def line_content(p):
 
 @pg.production("func-definition : FUNC COLON moves-list ")
 def func_def(p):
-    return ast.Line([ast.FuncDefinition(
+    return ast.FuncDefinition(
         p[0].getstr(),
         p[2],
         None,
         p[0].getsourcepos()
-    )])
+    )
 
 
 @pg.production("func-definition : FUNC ( def-args-list ) COLON moves-list ")
 def func_def_args(p):
-    return ast.Line([ast.FuncDefinition(
+    return ast.FuncDefinition(
         p[0].getstr(),
         p[5],
-        p[2],
+        p[2].get_stmts(),
         p[0].getsourcepos()
-    )])
+    )
 
 
 @pg.production("def-args-list : def-args-list , def-arg ")
@@ -108,44 +111,53 @@ def func_call(p):
     return ast.FuncCall(p[0].getstr(), None, p[0].getsourcepos())
 
 
+@pg.production("func-call : FUNC ( args-list ) ")
+def func_call_args(p):
+    return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
+
+
+@pg.production("args-list : args-list , arg ")
+def _(p):
+    p[0].append(p[2])
+    return p[0]
+
+
+@pg.production("args-list : arg ")
+def _(p):
+    return ast.CallArgList([p[0]])
+
+
+@pg.production("arg : moves-list ")
+def _(p):
+    return p[0]
+
+@pg.production("arg : expr ")
+def _(p):
+    return p[0]
+
+
+@pg.production("expr : expr PLUS expr")
+@pg.production("expr : expr MINUS expr")
+def func_call_expr_op(p):
+    return ast.Expr(p[0], p[1].getstr(), p[2])
+
+
+@pg.production("expr : NAME")
+def func_call_expr(p):
+    return ast.Variable(p[0].getstr(), p[0].getsourcepos())
+
+
+@pg.production("expr : NUMBER")
+def expr_num(p):
+    return ast.Number(int(p[0].getstr()), p[0].getsourcepos())
+
+
 @pg.production("step : STEP ")
 @pg.production("step : TURN_LEFT ")
 @pg.production("step : TURN_RIGHT ")
 def step(p):
     return ast.Step(p[0].getstr(), p[0].getsourcepos())
 
-
-@pg.production("func-call : FUNC ( args-list-steps ) ")
-def func_call_args(p):
-    return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
-
-
-@pg.production("func-call : FUNC [ args-list-numbers ] ")
-def func_call_args_numeric(p):
-    return ast.FuncCall(p[0].getstr(), p[2], p[0].getsourcepos())
-
-
-@pg.production("args-list-numbers : args-list-numbers , arg-number ")
-@pg.production("args-list-steps : args-list-steps , arg-moves ")
-def call_args_list(p):
-    p[0].append(p[2])
-    return p[0]
-
-
-@pg.production("args-list-steps : arg-moves ")
-@pg.production("args-list-numbers : arg-number ")
-def call_args(p):
-    return ast.CallArgList([p[0]])
-
-
-@pg.production("arg-number : NUMBER ")
-def call_args_NUMBER(p):
-    return ast.Number(p[0].getstr(), p[0].getsourcepos())
-
-
-@pg.production("arg-moves : moves-list ")
-def call_args_moves_list(p):
-    return p[0]
 
 
 @pg.error
@@ -161,8 +173,9 @@ def error_handler(token):
 parser = pg.build()
 
 class color:
-   RED = '\033[91m'
-   END = '\033[0m'
+    RED = '\033[91m'
+    END = '\033[0m'
+
 
 def parse(source):
     source = "%s\n" % source

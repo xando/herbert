@@ -1,13 +1,13 @@
 from rply.token import BaseBox
 
 
-class color:
-   RED = '\033[91m'
-   END = '\033[0m'
+class color(object):
+    RED = '\033[91m'
+    END = '\033[0m'
 
 
 class Node(BaseBox):
-    def compile(self, ctx):
+    def eval(self, ctx):
         pass
 
     # tests only
@@ -53,12 +53,14 @@ class Root(Node):
         return self.lines
 
     def __repr__(self):
-        return "Prog(lines=%s)" % self.lines
+        return "Root(lines=%s)" % self.lines
 
-    def compile(self, ctx):
+    def eval(self, ctx):
+        ret = []
         for line in self.lines:
-            line.compile(ctx)
+            ret.extend(line.eval(ctx) or [])
 
+        return ret
 
 class Line(Node):
 
@@ -74,9 +76,31 @@ class Line(Node):
     def __repr__(self):
         return "Line(stmts=%s)" % self.stmts
 
-    def compile(self, ctx):
+    def eval(self, ctx):
+        ret = []
         for stmt in self.stmts:
-            stmt.compile(ctx)
+            ret.extend(stmt.eval(ctx) or [])
+
+        return ret
+
+
+class FuncDefinition(Node):
+    def __init__(self, name, body, args=None, pos=None):
+        self.name = name
+        self.body = body
+        self.args = args or []
+        self.pos = pos
+
+    def getstr(self):
+        return self.name
+
+    def __repr__(self):
+        return "FuncDefinition('%s', %s, %s)" % (
+            self.name, self.body, self.args
+        )
+
+    def eval(self, ctx):
+        ctx.functions[self.name] = self.body, self.args
 
 
 class Step(Node):
@@ -90,8 +114,8 @@ class Step(Node):
     def __repr__(self):
         return "Step('%s')" % self.value
 
-    def compile(self, ctx):
-        ctx.stack[-1].code.append(self)
+    def eval(self, ctx):
+        return self.value
 
 
 class FuncCall(Node):
@@ -101,6 +125,7 @@ class FuncCall(Node):
             self.args = args.stmts
         else:
             self.args = []
+
         self.pos = pos
 
     def getstr(self):
@@ -109,59 +134,33 @@ class FuncCall(Node):
     def __repr__(self):
         return "FuncCall('%s', %s)" % (self.value, self.args)
 
-    def compile(self, ctx):
+    def eval(self, ctx):
         try:
             function_body, def_args = ctx.functions[self.value]
         except KeyError:
-           self.error('Function "%s" is undefined.' % self.value, ctx)
+            self.error('Function "%s" is undefined.' % self.value, ctx)
 
         def_args_number = len(def_args)
         call_args_number = len(self.args)
 
         if def_args_number != call_args_number:
             self.error('Function "%s" takes %s arguments, %s given.' % (
-               self.value, def_args_number, call_args_number), ctx
+                self.value, def_args_number, call_args_number), ctx
             )
 
         call_variables = {}
-
         for i, arg in enumerate(self.args):
-            ctx.stack.append(Frame(ctx.stack[-1].variables))
-            arg.compile(ctx)
-            frame = ctx.stack.pop()
-            call_variables[def_args[i].name] = Line(frame.code)
+            code = arg.eval(ctx)
+            if isinstance(code, int) and code < 1:
+                return []
+
+            call_variables[def_args[i].name] = code
 
         ctx.stack.append(Frame(call_variables))
+        ret = function_body.eval(ctx)
+        ctx.stack.pop()
 
-        if len(ctx.stack) > 64:
-           # a bit stupid, but good enough for now
-           self.error('Stack limit reached.', ctx)
-
-        for step in function_body.get_stmts():
-            step.compile(ctx)
-
-        frame = ctx.stack.pop()
-        ctx.stack[-1].code.extend(frame.code)
-
-
-class FuncDefinition(Node):
-    def __init__(self, name, body, args=None, pos=None):
-        self.name = name
-        self.body = body
-        if args:
-            self.args = args.stmts
-        else:
-            self.args = []
-        self.pos = pos
-
-    def getstr(self):
-        return self.name
-
-    def __repr__(self):
-        return "FuncDefinition('%s', %s, %s)" % (self.name, self.args, self.body)
-
-    def compile(self, ctx):
-        ctx.functions[self.name] = self.body, self.args
+        return ret
 
 
 class Variable(Node):
@@ -175,11 +174,26 @@ class Variable(Node):
     def __repr__(self):
         return "Variable('%s')" % self.name
 
-    def compile(self, ctx):
+    def eval(self, ctx):
         try:
-            ctx.stack[-1].variables[self.name].compile(ctx)
+            return ctx.stack[-1].variables[self.name]
         except KeyError:
             self.error('Variable "%s" is undefined.' % self.name, ctx)
+
+
+class DepthVariable(Node):
+    def __init__(self, name, pos=None):
+        self.name = name
+        self.pos = pos
+
+    def getstr(self):
+        return self.name
+
+    def __repr__(self):
+        return "DepthVariable('%s')" % self.name
+
+    def eval(self, ctx):
+        return ctx.stack[-1].depth.eval(ctx)
 
 
 class Number(Node):
@@ -187,14 +201,30 @@ class Number(Node):
         self.value = value
         self.pos = pos
 
-    def getstr(self):
+    def getint(self):
         return self.value
 
     def __repr__(self):
         return "Number(%s)" % self.value
 
-    def compile(self, ctx):
-        pass
+    def eval(self, ctx):
+        return self.value
+
+
+class Expr(Node):
+    def __init__(self, left, op, right, pos=None):
+        self.left = left
+        self.op = op
+        self.right = right
+
+    def __repr__(self):
+        return "Expr(%s, '%s', %s)" % (self.left, self.op, self.right)
+
+    def eval(self, ctx):
+        if self.op == '-':
+            return self.left.eval(ctx) - self.right.eval(ctx)
+        elif self.op == '+':
+            return self.left.eval(ctx) + self.right.eval(ctx)
 
 
 class DefArg(Node):
@@ -240,7 +270,7 @@ class Frame(object):
         self.variables = variables or {}
 
     def __repr__(self):
-        return "<Frame %s: %s>" % (self.variables, self.code)
+        return "<Frame %s:%s>" % (self.variables, self.code)
 
 
 class Context(object):
@@ -251,7 +281,7 @@ class Context(object):
         self.stack = [Frame()]
 
 
-def compile(ast, source):
+def eval(ast, source):
     ctx = Context(source)
-    ast.compile(ctx)
-    return "".join([c.value for c in ctx.stack[-1].code])
+    code = ast.eval(ctx)
+    return "".join([c for c in code])

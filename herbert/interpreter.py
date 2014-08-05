@@ -8,9 +8,8 @@ def interpret(source):
         "error": {}
     }
     try:
-
         ast_tree = parser.parse(source)
-        ret['code'] = ast.compile(ast_tree, source)
+        ret['code'] = ast.eval(ast_tree, source)
     except ValueError as e:
         ret['error'] = e.message
 
