@@ -266,7 +266,6 @@ class CallArgList(Line):
 class Frame(object):
 
     def __init__(self, variables=None):
-        self.code = []
         self.variables = variables or {}
 
     def __repr__(self):
