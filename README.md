@@ -81,8 +81,8 @@ Functions can take arguments to control their behavior. There are two types of
 arguments: instruction arguments, and numeric arguments. Here is an example of
 numeric arguments:
 
-	f[A]:ssslf[A-1]
-	f[4]
+	f(A):ssslf(A-1)
+	f(4)
 
 The 'f' function takes a single argument (called 'A'). Argument names must be
 one upper case letter.  When using such a function you must append the
@@ -116,12 +116,12 @@ this will result in the following (infinit) instruction sequence:
 "llslsslssslsssslssssslssssss..."
 
 
-#### Mixing arguments (not implemented)
+#### Mixing arguments
 
 Of course, you can have more than one argument and you can mix both types within
 the same function:
 
-	f(A)[B]:Arf(sA)[B-1]
+	f(A, B):Arf(sA, B-1)
 
 Now f(s)[5] will result in "srssrsssrssssrsssssr"
 
