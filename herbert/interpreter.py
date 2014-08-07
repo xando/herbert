@@ -1,5 +1,3 @@
-import sys
-
 from . import parser
 from . import ast
 
