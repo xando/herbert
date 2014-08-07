@@ -1,13 +1,13 @@
-## An implmentation of herbert language
+# An implmentation of herbert language
 
 A simple language which was created for the purpose of a puzzle/riddle game whit the same name.
 
-### Install
+## Install
 
 	$ pip install herbert
 
 
-### Run
+## Run
 
 	$ herbert code.h
 	sssrrr
@@ -19,7 +19,7 @@ content of the `code.h` file
 	sssf
 
 
-### Usage
+## Usage
 
 As an output the language will generate a chain combined of `s`, `r`, `l`, eg `sssrrssllss`
 
@@ -128,7 +128,7 @@ Now f(s, 5) will result in `srssrsssrssssrsssssr`
 That's it! You know all you need to know to write "h" programs.
 
 
-### Solving Levels
+## Solving Levels
 
 To solve level in the text mode, you will need few things:
 
