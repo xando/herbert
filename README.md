@@ -1,6 +1,9 @@
 # An implmentation of herbert language
 
 A simple language which was created for the purpose of a puzzle/riddle game whit the same name.
+You can find more about Herbert [here](http://herbert.tealang.info/). 
+
+
 
 ## Install
 
@@ -169,3 +172,9 @@ A brief introduction what is what here.
     position: x=1 y=1
     solved: True
 
+
+## Herbert Game
+
+I'm in progress of implementing a new version of Herbert game ;) Stay tuned.
+
+![Screenshot](screenshot.png)
