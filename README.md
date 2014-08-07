@@ -77,7 +77,7 @@ and then calls itself which executes `s`, which calls `f` again .... etc.
 This means that, when executing the `f` the robot well keep moving forward infinitely.
 
 
-#### Numeric arguments (not implemented)
+#### Numeric arguments
 
 
 Functions can take arguments to control their behavior. There are two types of
