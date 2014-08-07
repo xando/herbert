@@ -127,3 +127,43 @@ Now f(s, 5) will result in `srssrsssrssssrsssssr`
 
 That's it! You know all you need to know to write "h" programs.
 
+
+### Solving Levels
+
+To solve level in the text mode, you will need few things:
+
+**Create the level file**
+
+Or just use the one bellow
+
+    .......
+    ...*...
+    .......
+    .*.1.*.
+    .......
+    ...*...
+    .......
+
+A brief introduction what is what here.
+* `*` - it's a star, the main goal for the programm is collect them all
+* `.` - just a space, you can move there
+* `0`, `1`, `2`, `3` - starting point, depending on the number it faces 'player' towards:
+`0`  up, `1` right, `2`  down, `3`  left
+
+**Crate the code file**
+
+    f(A):rssssf(A-1)
+    ssrssf(3)
+
+**Use your imatination and run**
+
+    $ herbert code.h level.txt
+    
+    = Translated =
+    ssrssrssssrssssrssss
+
+    = Level =
+    walk: ssrssrssssrssssrssss
+    position: x=1 y=1
+    solved: True
+
