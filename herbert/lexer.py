@@ -15,8 +15,6 @@ lg.add("PLUS", r"\+")
 lg.add("MINUS", r"\-")
 lg.add("(", r"\(")
 lg.add(")", r"\)")
-lg.add("[", r"\[")
-lg.add("]", r"\]")
 lg.add(",", r"\,")
 
 lg.ignore(r" +")
