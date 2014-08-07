@@ -150,12 +150,14 @@ A brief introduction what is what here.
 * `0`, `1`, `2`, `3` - starting point, depending on the number it faces 'player' towards:
 `0`  up, `1` right, `2`  down, `3`  left
 
+
 **Crate the code file**
 
     f(A):rssssf(A-1)
     ssrssf(3)
 
-**Use your imatination and run**
+
+**Use your imagination and run**
 
     $ herbert code.h level.txt
     
