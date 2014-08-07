@@ -4,13 +4,15 @@ from herbert import interpreter
 
 
 def entry_point(argv):
-    if len(argv) > 1:
-        filename = argv[1]
-        f = open(filename, 'r')
-        source = f.read()
-        f.close()
+    world = None
 
-        ret = interpreter.interpret(source)
+    if len(argv) > 1:
+        source = open(argv[1], 'r').read()
+
+        if len(argv) > 2:
+            world = open(argv[2], 'r').read()
+
+        ret = interpreter.interpret(source, world)
         if not ret['error']:
             print ret['code']
         else:

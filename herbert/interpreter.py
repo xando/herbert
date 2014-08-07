@@ -2,7 +2,55 @@ from . import parser
 from . import ast
 
 
-def interpret(source):
+def walk_world(world, code):
+    ret = []
+
+    world = [[e for e in line] for line in world.split()]
+    size = len(world)
+    moves = (
+        (-1, 0), (0, 1), (1, 0), (0, -1)
+    )
+
+    position = None
+    direction = None
+
+    for x in range(size):
+        for y in range(size):
+            if world[x][y] in ['0', '1', '2', '3']:
+                position = (x, y)
+                direction = int(world[x][y])
+
+    for step in code:
+        if step == 'r':
+            direction = (direction + 1) % 4
+            ret.append(step)
+
+        elif step == 'l':
+            direction = (direction - 1) % 4
+            ret.append(step)
+
+        elif step == 's':
+            next_move = moves[direction]
+
+            position = (
+                position[0] + next_move[0],
+                position[1] + next_move[1]
+            )
+            if position[0] >= 0 and position[0] < size and \
+               position[1] >= 0 and position[1] < size:
+                ret.append('s')
+            else:
+                ret.append('x')
+                position = (
+                    position[0] - next_move[0],
+                    position[1] - next_move[1]
+                )
+
+
+    return "".join(ret), position
+
+
+def interpret(source, world=None):
     ret = {
         "code": "",
         "error": {}
