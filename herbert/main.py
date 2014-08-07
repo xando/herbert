@@ -14,7 +14,8 @@ def entry_point(argv):
 
         ret = interpreter.interpret(source, world)
         if not ret['error']:
-            print ret['code']
+            print ret.get('walk', None)
+            print ret.get('success', None)
         else:
             print ret['error']['location']
             print ret['error']['message']
