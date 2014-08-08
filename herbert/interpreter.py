@@ -23,9 +23,11 @@ def walk_world(world, code):
     for step in code:
         if step == 'r':
             direction = (direction + 1) % 4
+            ret.append(str(direction))
             ret.append(step)
 
         elif step == 'l':
+            ret.append(str(direction))
             direction = (direction - 1) % 4
             ret.append(step)
 
