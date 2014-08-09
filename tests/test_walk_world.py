@@ -127,3 +127,13 @@ def test_stars():
     srsrssrssrss
     """
     assert walk_position_solved(world, code) == ("s1rs2rss3rss0rss", (0, 0), True)
+
+
+def test_wall():
+    world = """
+    .#.
+    #0#
+    .#.
+    """
+    code = "s"
+    assert walk_position_solved(world, code) == ("x", (1, 1), True)

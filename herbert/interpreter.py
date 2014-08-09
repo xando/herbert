@@ -39,9 +39,10 @@ def walk_world(world, code):
                 position[1] + next_move[1]
             )
             if position[0] >= 0 and position[0] < size and \
-               position[1] >= 0 and position[1] < size:
-                ret.append('s')
+               position[1] >= 0 and position[1] < size and \
+               world[position[0]][position[1]] in ['.', '*']:
                 element = world[position[0]][position[1]]
+                ret.append('s')
                 if element == '*':
                     world[position[0]][position[1]] = '.'
             else:
