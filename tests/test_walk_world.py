@@ -82,7 +82,7 @@ def test_turns():
     ...
     """
     code = "rrrrllll"
-    assert walk_position(world, code) == ("1r2r3r0r0l3l2l1l", (1, 1))
+    assert walk_position(world, code) == ("r1r2r3r0l3l2l1l0", (1, 1))
 
     world = """
     ...
@@ -90,7 +90,7 @@ def test_turns():
     ...
     """
     code = "srrrrllll"
-    assert walk_position(world, code) == ("s1r2r3r0r0l3l2l1l", (0, 1))
+    assert walk_position(world, code) == ("sr1r2r3r0l3l2l1l0", (0, 1))
 
     world = """
     ...
@@ -98,7 +98,7 @@ def test_turns():
     ...
     """
     code = "ssrrrrllll"
-    assert walk_position(world, code) == ("sx1r2r3r0r0l3l2l1l", (0, 1))
+    assert walk_position(world, code) == ("sxr1r2r3r0l3l2l1l0", (0, 1))
 
 
 def test_stars():
@@ -126,7 +126,7 @@ def test_stars():
     code = """
     srsrssrssrss
     """
-    assert walk_position_solved(world, code) == ("s1rs2rss3rss0rss", (0, 0), True)
+    assert walk_position_solved(world, code) == ("sr1sr2ssr3ssr0ss", (0, 0), True)
 
 
 def test_wall():
