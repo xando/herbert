@@ -1,4 +1,4 @@
-# An implementation of herbert language
+# An implementation of the herbert language
 
 
 A simple language which was created for the purpose of a puzzle/riddle game whit the same name.
