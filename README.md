@@ -1,4 +1,5 @@
-# An implmentation of herbert language
+# An implementation of herbert language
+
 
 A simple language which was created for the purpose of a puzzle/riddle game whit the same name.
 You can find more about Herbert [here](http://herbert.tealang.info/). 
