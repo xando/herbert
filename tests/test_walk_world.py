@@ -2,17 +2,17 @@ from herbert import interpreter
 
 
 def walk(world, code):
-    code, _, _ = interpreter.walk_world(world, code)
+    code, _, _ = interpreter.walk_world(world.split(), code)
     return code
 
 
 def walk_position(world, code):
-    code, poistion, _ = interpreter.walk_world(world, code)
+    code, poistion, _ = interpreter.walk_world(world.split(), code)
     return code, poistion
 
 
 def walk_position_solved(world, code):
-    return interpreter.walk_world(world, code)
+    return interpreter.walk_world(world.split(), code)
 
 
 def test_starting_point():

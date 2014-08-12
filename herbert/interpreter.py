@@ -5,7 +5,7 @@ from . import ast
 def walk_world(world, code):
     ret = []
 
-    world = [[e for e in line] for line in world.split()]
+    world = [[e for e in line] for line in world]
     size = len(world)
     moves = (
         (-1, 0), (0, 1), (1, 0), (0, -1)
