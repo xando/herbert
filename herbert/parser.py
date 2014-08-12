@@ -165,16 +165,15 @@ def error_handler(token):
     line = token.source_pos.lineno
     column = token.source_pos.colno
 
-    raise ValueError('(%s:%s) Ran into a "%s" where it wasn\'t expected.' % (
-        line, column, token.gettokentype())
-    )
+    error = {
+        "location": "Line:%s, Column:%s" % (line, column),
+        "message": "Ran into a '%s' where it wasn\'t expected." % token.gettokentype()
+    }
+
+    raise ValueError(error)
 
 
 parser = pg.build()
-
-class color:
-    RED = '\033[91m'
-    END = '\033[0m'
 
 
 def parse(source):
@@ -187,21 +186,9 @@ def parse(source):
         colno = token_stream.idx -source.rfind("\n", 0, token_stream.idx)
         lineno = token_stream._lineno
 
-        line = source.split("\n")[lineno - 1]
-        code = []
-        for i, c in enumerate(line):
-            if i == colno - 1:
-                code.append(color.RED + c + color.END)
-            else:
-                code.append(c)
-
         error = {
             "location": "Line:%s, Column:%s" % (lineno, colno),
             "message": "Lexer error",
-            "help": "%s\n%s" % (
-                "".join(code),
-                color.RED + "-" * (colno - 1) + '^' + color.END
-            )
         }
 
         raise ValueError(error)

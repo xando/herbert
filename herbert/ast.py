@@ -1,11 +1,6 @@
 from rply.token import BaseBox
 
 
-class color(object):
-    RED = '\033[91m'
-    END = '\033[0m'
-
-
 class Node(BaseBox):
     def eval(self, ctx):
         pass
@@ -21,21 +16,10 @@ class Node(BaseBox):
         return self.__dict__ == other.__dict__
 
     def error(self, message, ctx):
-        line = ctx.source.split("\n")[self.pos.lineno - 1]
-        code = []
-        for i, c in enumerate(line):
-            if i == self.pos.colno - 1:
-                code.append(color.RED + c + color.END)
-            else:
-                code.append(c)
 
         error = {
            "location": "Line:%s, Column:%s" % (self.pos.lineno, self.pos.colno),
            "message": message,
-           "help": "%s\n%s" % (
-              "".join(code),
-              color.RED + "-" * (self.pos.colno - 1) + '^' + color.END
-           )
         }
 
         raise ValueError(error)
