@@ -16,9 +16,9 @@ def walk(level, code, score):
     for x in range(size):
         for y in range(size):
             if world[x][y] in ['0', '1', '2', '3']:
-                # world[x][y] = "."
-                position = (x, y)
                 direction = int(world[x][y])
+                position = (x, y)
+                world[x][y] = "."
 
     for step in code:
         if step == 'r':
