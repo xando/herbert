@@ -190,4 +190,6 @@ A brief introduction what is what here.
 
 I'm in progress of implementing a new version of Herbert game ;) Stay tuned.
 
+Developer preview is available here http://xando.webfactional.com/
+
 ![Screenshot](screenshot.png)
