@@ -1,139 +1,148 @@
-from herbert import interpreter
+from herbert import solve
 
 
-def walk(world, code):
-    code, _, _ = interpreter.walk_world(world.split(), code)
+def walk(level, code):
+    code, _, _ = solve.walk(level, code, 0)
     return code
 
 
-def walk_position(world, code):
-    code, poistion, _ = interpreter.walk_world(world.split(), code)
+def walk_position(level, code):
+    code, poistion, _ = solve.walk(level, code, 0)
     return code, poistion
 
 
-def walk_position_solved(world, code):
-    return interpreter.walk_world(world.split(), code)
+def walk_position_solved(level, code, score):
+    return solve.walk(level, code, score)
 
 
 def test_starting_point():
-    world = """
-    0
-    """
     code = "s"
-    assert walk(world, code) == "x"
 
-    world = """
-    1
-    """
-    code = "s"
-    assert walk(world, code) == "x"
+    level = {
+        "content": ["0"]
+    }
+    assert walk(level, code) == "x"
 
-    world = """
-    2
-    """
-    code = "s"
-    assert walk(world, code) == "x"
+    level = {
+        "content": ["0"]
+    }
+    assert walk(level, code) == "x"
 
-    world = """
-    3
-    """
-    code = "s"
-    assert walk(world, code) == "x"
+    level = {
+        "content": ["2"]
+    }
+    assert walk(level, code) == "x"
+
+    level = {
+        "content": ["3"]
+    }
+    assert walk(level, code) == "x"
 
 
-def test_simple():
-    world = """
-    ...
-    .0.
-    ...
-    """
+def test_simple_move():
     code = "ss"
-    assert walk_position(world, code) == ("sx", (0, 1))
 
-    world = """
-    ...
-    .1.
-    ...
-    """
-    code = "ss"
-    assert walk_position(world, code) == ("sx", (1, 2))
+    level = {
+        "content": [
+            "...",
+            ".0.",
+            "..."
+        ]
+    }
+    assert walk_position(level, code) == ("sx", (0, 1))
 
-    world = """
-    ...
-    .2.
-    ...
-    """
-    code = "ss"
-    assert walk_position(world, code) == ("sx", (2, 1))
+    level = {
+        "content": [
+            "...",
+            ".1.",
+            "..."
+        ]
+    }
+    assert walk_position(level, code) == ("sx", (1, 2))
 
-    world = """
-    ...
-    .3.
-    ...
-    """
-    code = "ss"
-    assert walk_position(world, code) == ("sx", (1, 0))
+    level = {
+        "content": [
+            "...",
+            ".2.",
+            "..."
+        ]
+    }
+    assert walk_position(level, code) == ("sx", (2, 1))
+
+    level = {
+        "content": [
+            "...",
+            ".3.",
+            "..."
+        ]
+    }
+    assert walk_position(level, code) == ("sx", (1, 0))
 
 
 def test_turns():
-    world = """
-    ...
-    .0.
-    ...
-    """
+    level = {
+        "content": [
+            "...",
+            ".0.",
+            "..."
+        ]
+    }
+
     code = "rrrrllll"
-    assert walk_position(world, code) == ("r1r2r3r0l3l2l1l0", (1, 1))
+    assert walk_position(level, code) == ("r1r2r3r0l3l2l1l0", (1, 1))
 
-    world = """
-    ...
-    .0.
-    ...
-    """
     code = "srrrrllll"
-    assert walk_position(world, code) == ("sr1r2r3r0l3l2l1l0", (0, 1))
+    assert walk_position(level, code) == ("sr1r2r3r0l3l2l1l0", (0, 1))
 
-    world = """
-    ...
-    .0.
-    ...
-    """
     code = "ssrrrrllll"
-    assert walk_position(world, code) == ("sxr1r2r3r0l3l2l1l0", (0, 1))
+    assert walk_position(level, code) == ("sxr1r2r3r0l3l2l1l0", (0, 1))
 
 
 def test_stars():
-    world = """
-    .*.
-    .0.
-    ...
-    """
+    level = {
+        "content": [
+            ".*.",
+            ".0.",
+            "..."
+        ],
+        "limits": [3, 2, 1]
+    }
     code = "s"
-    assert walk_position_solved(world, code) == ("s", (0, 1), True)
+    assert walk_position_solved(level, code, 0) == ("s", (0, 1), 3)
 
-    world = """
-    .*.
-    .1.
-    ...
-    """
+
+    level = {
+        "content": [
+            ".*.",
+            ".1.",
+            "..."
+        ],
+        "limits": [3, 2, 1]
+    }
     code = "s"
-    assert walk_position_solved(world, code) == ("s", (1, 2), False)
+    assert walk_position_solved(level, code, 0) == ("s", (1, 2), 0)
 
-    world = """
-    .*.
-    *0*
-    .*.
-    """
+    level = {
+        "content": [
+            ".*.",
+            "*0*",
+            ".*."
+        ],
+        "limits": [3, 2, 1]
+    }
     code = """
     srsrssrssrss
     """
-    assert walk_position_solved(world, code) == ("sr1sr2ssr3ssr0ss", (0, 0), True)
+    assert walk_position_solved(level, code, 3) == ("sr1sr2ssr3ssr0ss", (0, 0), 1)
 
 
 def test_wall():
-    world = """
-    .#.
-    #0#
-    .#.
-    """
+    level = {
+        "content": [
+            ".#.",
+            "#0#",
+            ".#."
+        ],
+    }
     code = "s"
-    assert walk_position_solved(world, code) == ("x", (1, 1), True)
+    assert walk_position_solved(level, code, 1) == ("x", (1, 1), 0)

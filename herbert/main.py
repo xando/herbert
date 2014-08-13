@@ -1,4 +1,5 @@
 import sys
+import json
 
 from herbert import interpreter
 
@@ -15,10 +16,10 @@ def entry_point(argv):
             print "  %s" % ret['code']
 
             if len(argv) > 2:
-                world = open(argv[2], 'r').read()
+                level = json.load(open(argv[2]))
 
                 valid = False
-                for line in world:
+                for line in level['content']:
                     for e in line:
                         if e in ['0', '1', '2', '3']:
                             valid = True
@@ -28,11 +29,11 @@ def entry_point(argv):
                     sys.exit(1)
 
 
-                walk, position, success = interpreter.walk_world(world, ret['code'])
+                walk, position, success = interpreter.walk_world(level, source, ret['code'])
                 print "\n= Level ="
                 print "  walk: %s" % walk
                 print "  position: x=%s y=%s" % position
-                print "  solved: %s" % success
+                print "  solved: %s" % u"\u2605 " * success
         else:
             print ret['error']['location']
             print ret['error']['message']
