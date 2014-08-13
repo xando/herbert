@@ -140,13 +140,26 @@ To solve level in the text mode, you will need few things:
 
 Or just use the one bellow
 
-    .......
-    ...*...
-    .......
-    .*.1.*.
-    .......
-    ...*...
-    .......
+	{
+		"content": [
+			".........",
+			".........",
+			"..@.2.@..",
+			"....^....",
+			"..*^^^*..",
+			"....^....",
+			"..@.*.@..",
+			".........",
+			"........."
+		],
+		"limits": [
+			30,
+			25,
+			10
+		],
+		"name": "Level 1",
+		"key": "0e91d682d"
+	}
 
 A brief introduction what is what here.
 * `*` - it's a star, the main goal for the programm is collect them all
@@ -157,13 +170,12 @@ A brief introduction what is what here.
 
 **Crate the code file**
 
-    f(A):rssssf(A-1)
-    ssrssf(3)
-
+	f:slsrsls
+	rfff
 
 **Use your imagination and run**
 
-    $ herbert code.h level.txt
+    $ herbert code.h level.json
     
     = Translated =
     ssrssrssssrssssrssss
@@ -171,8 +183,8 @@ A brief introduction what is what here.
     = Level =
     walk: ssrssrssssrssssrssss
     position: x=1 y=1
-    solved: True
-
+	solved: ★ ★ 
+	length: 22
 
 ## Herbert Game
 
