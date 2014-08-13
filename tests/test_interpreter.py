@@ -23,6 +23,7 @@ def test_function_simple():
     """)
 
     assert ret["code"] == "sss"
+    assert ret["length"] == 5
 
     ret = interpreter.interpret("""
     z:rrr
@@ -31,6 +32,7 @@ def test_function_simple():
     """)
 
     assert ret["code"] == "sssrrr"
+    assert ret["length"] == 10
 
     ret = interpreter.interpret("""
     z:rrr
@@ -39,6 +41,7 @@ def test_function_simple():
     """)
 
     assert ret["code"] == "srrr"
+    assert ret["length"] == 8
 
 
 def test_function_arguments():
@@ -48,6 +51,7 @@ def test_function_arguments():
     """)
 
     assert ret["code"] == "ss"
+    assert ret["length"] == 6
 
     ret = interpreter.interpret("""
     f(A,B):AB
@@ -55,6 +59,7 @@ def test_function_arguments():
     """)
 
     assert ret["code"] == "ssrr"
+    assert ret["length"] == 10
 
     ret = interpreter.interpret("""
     f(A):llA
@@ -62,6 +67,7 @@ def test_function_arguments():
     """)
 
     assert ret["code"] == "ssllrr"
+    assert ret["length"] == 10
 
     ret = interpreter.interpret("""
     z(A):A
@@ -70,6 +76,7 @@ def test_function_arguments():
     """)
 
     assert ret["code"] == "sslrrl"
+    assert ret["length"] == 14
 
 
 def test_function_depth():
@@ -79,6 +86,7 @@ def test_function_depth():
     """)
 
     assert ret["code"] == "ssss"
+    assert ret["length"] == 8
 
     ret = interpreter.interpret("""
     f(A, B):sf(A-1, B)B
@@ -86,3 +94,4 @@ def test_function_depth():
     """)
 
     assert ret["code"] == "ssssrrrrrrrr"
+    assert ret["length"] == 13
