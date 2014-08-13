@@ -1,7 +1,12 @@
+import re
 import sys
 import json
 
-from herbert import interpreter
+from . import interpreter
+from . import solve
+
+
+rx = re.compile('\s|\:|\(|\)')
 
 
 def entry_point(argv):
@@ -28,16 +33,16 @@ def entry_point(argv):
                     print "Level file does not have starting position"
                     sys.exit(1)
 
-
-                walk, position, success = interpreter.walk_world(level, source, ret['code'])
+                score = len(rx.sub('', ret['code']))
+                walk, position, success = solve.walk(level, ret['code'], score)
                 print "\n= Level ="
                 print "  walk: %s" % walk
                 print "  position: x=%s y=%s" % position
-                print "  solved: %s" % u"\u2605 " * success
+                print "  solved: %s" % (u"\u2605 " * success,)
+                print "  length: %s" % score
         else:
             print ret['error']['location']
             print ret['error']['message']
-            print ret['error']['help']
 
         sys.exit()
 

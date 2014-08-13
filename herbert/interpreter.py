@@ -1,9 +1,5 @@
-import re
-
 from . import parser
 from . import ast
-
-rx = re.compile('\s|\:|\(|\)')
 
 
 def interpret(source, world=None):
