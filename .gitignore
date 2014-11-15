@@ -1,4 +1,9 @@
 *.pyc
 web/db.sqlite3
+.site-packages/
+.virtualenv
+dist/
+herbert.egg-info/
+
 
 
