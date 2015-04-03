@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | herbert</title>
+
+    <link rel="stylesheet" href="libs/bootstrap-3.3.4-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="libs/bootstrap-3.3.4-dist/css/bootstrap-theme.min.css" />
+
+    <link rel="stylesheet" href="main.css" />
+
+    <style>
+    /* a style sheet needs to be present for cursor hiding and custom cursors to work. */
+    </style>
+  </head>
+  <body>
+
+
+      <div class="container">
+          <div class="jumbotron text-center">
+              <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="736px" width="414px"></canvas>
+          </div>
+
+
+          <div id="help" class="row marketing">
+
+                <h2>Help</h2>
+                <p>As an output the language will generate a chain combined of <code>s</code>, <code>r</code>, <code>l</code>, eg <code>sssrrssllss</code></p>
+                <p>Where:</p>
+                <ul>
+                    <li><code>s</code> - stands for straight This makes the guy move straight ahead;</li>
+                    <li><code>l</code> - stands for left) This makes the guy turns to its left;</li>
+                    <li><code>r</code> - stands for right) This makes the guy turns to its right.</li>
+                </ul>
+
+                <p>Each of this steps is responsible of changing state of the game character.</p>
+                <p>For example the program <code>sssslssssr</code> means &quot;move four units straight,
+                    then turn to your left, move four units straight, then turn right.&quot;
+                    Of course, any level may be solved just with these.</p>
+                    <p>But the real objective of the game, is to write small programs (the smallest possible).
+                        In order to do that language provides <strong>functions</strong>.</p>
+                        <h4 id="basics">Basics</h4>
+                <p>To call the same sequence of steps more than once. Functions are just a way
+                    to group a sequence of commands that you can reuse many times.
+                    For example, here is a program that creates a function:</p>
+                    <pre><code>f:ssss
+flfr</code></pre><p>The first line defines the function. Function have names consisting of
+                    one lower case letter (here we named it <code>f</code>), after the function name comes a <code>:</code>(colon)
+                    then the instructions (called the function body, here it is <code>ssss</code>),
+                    and a new line terminates the definition. Now you can &quot;call&quot; the function
+                    simply using its name as a new instruction, that is <code>flfr</code> is now equivalent to <code>sssslssssr</code>.
+                    Note that you cannot name a function <code>r</code>, <code>s</code> or <code>l</code>
+                    since those three letters are reserved for the three primitives of <code>h</code>.</p>
+                    <p>Function bodies can contain any instructions even other function calls. For example:</p>
+                    <pre><code>f:ssss
+q:flfr
+q</code></pre>
+
+                <h4 id="recursion">Recursion</h4>
+                <p>This program is equivalent to the above. Note how it defines
+                    two functions (<code>f</code> and <code>q</code>), and how the second one calls the first.
+                    Functions can even call themselves, this is called recursion:</p>
+                    <pre><code>f:sf
+f</code></pre><p>In this program we define a function that executes an <code>s</code>,
+                    and then calls itself which executes <code>s</code>, which calls <code>f</code> again .... etc.
+                            This means that, when executing the <code>f</code> the guy well keep moving forward "infinitely", with a limit of 64 function calls, then he will stop.
+                    </p>
+
+            </div>
+
+            <footer class="footer text-center">
+                <p>&copy; </p>
+            </footer>
+
+
+      </div>
+
+
+
+    <script type='text/javascript'>
+  // connect to canvas
+  var Module = {
+    filePackagePrefixURL: "Release/",
+    memoryInitializerPrefixURL: "Release/",
+    preRun: [],
+    postRun: [],
+    print: (function() {
+      return function(text) {
+        console.log (text);
+      };
+    })(),
+    printErr: function(text) {
+      console.error (text);
+    },
+    canvas: document.getElementById('canvas'),
+    progress: null,
+    setStatus: function(text) {
+      if (this.progress == null) 
+      {
+        if (typeof UnityProgress != 'function')
+          return;
+        this.progress = new UnityProgress (canvas);
+      }
+      if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+      if (text === Module.setStatus.text) return;
+      this.progress.SetMessage (text);
+      var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+      if (m)
+        this.progress.SetProgress (parseInt(m[2])/parseInt(m[4]));
+      if (text === "") 
+        this.progress.Clear()
+    },
+    totalDependencies: 0,
+    monitorRunDependencies: function(left) {
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+    }
+  };
+  Module.setStatus('Downloading (0.0/1)');
+</script>
+<script src="Release/UnityConfig.js"></script>
+<script src="Release/fileloader.js"></script>
+<script>if (!(!Math.fround)) {
+  var script = document.createElement('script');
+  script.src = "Release/web-3.js";
+  document.body.appendChild(script);
+} else {
+  var codeXHR = new XMLHttpRequest();
+  codeXHR.open('GET', 'Release/web-3.js', true);
+  codeXHR.onload = function() {
+    var code = codeXHR.responseText;
+    if (!Math.fround) { 
+try {
+  console.log('optimizing out Math.fround calls');
+  var m = /var ([^=]+)=global\.Math\.fround;/.exec(code);
+  var minified = m[1];
+  if (!minified) throw 'fail';
+  var startAsm = code.indexOf('// EMSCRIPTEN_START_FUNCS');
+  var endAsm = code.indexOf('// EMSCRIPTEN_END_FUNCS');
+  var asm = code.substring(startAsm, endAsm);
+  do {
+    var moar = false; // we need to re-do, as x(x( will not be fixed
+    asm = asm.replace(new RegExp('[^a-zA-Z0-9\\$\\_]' + minified + '\\(', 'g'), function(s) { moar = true; return s[0] + '(' });
+  } while (moar);
+  code = code.substring(0, startAsm) + asm + code.substring(endAsm);
+  code = code.replace("'use asm'", "'almost asm'");
+} catch(e) { console.log('failed to optimize out Math.fround calls ' + e) }
+ }
+
+    var blob = new Blob([code], { type: 'text/javascript' });
+    codeXHR = null;
+    var src = URL.createObjectURL(blob);
+    var script = document.createElement('script');
+    script.src = URL.createObjectURL(blob);
+    script.onload = function() {
+      URL.revokeObjectURL(script.src);
+    };
+    document.body.appendChild(script);
+  };
+  codeXHR.send(null);
+}
+</script>
+  </body>
+</html>
